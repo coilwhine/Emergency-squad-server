@@ -5,9 +5,9 @@ export const squadsRouter = Router();
 
 squadsRouter.get('/all', async (req: Request, res: Response, next: NextFunction) => {
 
-    const squadsList = getAllSquads()
+    const allSquads = await getAllSquads()
 
-    return res.json(squadsList)
+    return res.json(allSquads)
 })
 
 squadsRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
