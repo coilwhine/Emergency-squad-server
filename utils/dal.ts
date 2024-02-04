@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
 
-export function connect() {
+export function connectToDb() {
     mongoose.connect("mongodb://localhost:27017/emergency-squad");
 }
