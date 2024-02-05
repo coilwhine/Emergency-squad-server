@@ -2,18 +2,28 @@ import mongoose from "mongoose";
 
 export type UserModel = {
     sub: mongoose.Schema.Types.ObjectId,
-    name: string,
-    photo: string
+    firstName: string,
+    lastName: string,
+    email: string,
+    phone: string,
 }
 
 const userSchema = new mongoose.Schema<UserModel>({
-    name: {
+    firstName: {
         type: String,
         required: true,
     },
-    photo: {
+    lastName: {
         type: String,
-        default: null
+        required: true,
+    },
+    email: {
+        type: String,
+        required: true,
+    },
+    phone: {
+        type: String,
+        required: true,
     }
 })
 

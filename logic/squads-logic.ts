@@ -1,4 +1,4 @@
-import { squadModel } from "../models/squad-model";
+import { SquadModel, squadModel } from "../models/squad-model";
 
 export async function getAllSquads() {
 
@@ -10,14 +10,35 @@ export async function getAllSquads() {
     }
 }
 
-export async function addNewSquad(inputdate: { name: string }) {
+export async function createNewSquad(inputData: SquadModel) {
 
     try {
-        await squadModel.create({
-            name: inputdate.name
+        return await squadModel.create({
+            name: inputData.name,
+            commander: inputData.commander,
+            members: []
         });
     } catch (error) {
         console.error(`Error creating new squad: ${error.message}`);
     }
 }
+
+export async function addUserToSquad(inputData: { squadId: string, userId: string }) {
+
+    const squadId = inputData.squadId;
+    const userId = inputData.userId;
+
+    try {
+        const updatedItem = await squadModel.findByIdAndUpdate(
+            squadId,
+            { $push: { "members": userId } },
+            { new: true }
+        );
+
+        return updatedItem;
+    } catch (error) {
+        console.error(`Error creating new squad: ${error.message}`);
+    }
+}
+
 
