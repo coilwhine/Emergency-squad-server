@@ -5,7 +5,8 @@ export type UserModel = {
     firstName: string,
     lastName: string,
     email: string,
-    phone: string,
+    image: string,
+    phone: string
 }
 
 const userSchema = new mongoose.Schema<UserModel>({
@@ -20,6 +21,9 @@ const userSchema = new mongoose.Schema<UserModel>({
     email: {
         type: String,
         required: true,
+    },
+    image: {
+        type: String
     },
     phone: {
         type: String,
