@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { addNewUser, getAllUsers } from "../logic/users-logic";
+import { addNewUser, getAllUsers, getUserByGoogleId, getUserById, updateUser } from "../logic/users-logic";
 
 export const usersRouter = Router();
 
@@ -10,7 +10,32 @@ usersRouter.get('/all', async (req: Request, res: Response, next: NextFunction) 
     return res.json(allSquads);
 })
 
+usersRouter.get('/userid/:userid', async (req: Request, res: Response, next: NextFunction) => {
+
+    const userId = req.params.userid;
+    const allSquads = await getUserById(userId);
+
+    return res.json(allSquads);
+})
+
+usersRouter.get('/googleid/:googleid', async (req: Request, res: Response, next: NextFunction) => {
+
+    const userGoogleId = req.params.googleid;
+    console.log(userGoogleId);
+
+    const user = await getUserByGoogleId(userGoogleId);
+
+    return res.json(user);
+})
+
 usersRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
+
+    if (!req.body.googleId) {
+        return res.status(400).json({
+            error: "missing googel id",
+            message: "Google id is missing"
+        });
+    }
 
     if (!req.body.firstName) {
         return res.status(400).json({
@@ -40,9 +65,24 @@ usersRouter.post('/', async (req: Request, res: Response, next: NextFunction) =>
         });
     }
 
+    if (!req.body.accessToken) {
+        return res.status(400).json({
+            error: "missing access token",
+            message: "Access token is missing"
+        });
+    }
+
     try {
+        const userExist = await getUserByGoogleId(req.body.googleId);
+
+        if (userExist[0]) {
+            const resoult = await updateUser(req.body);
+            return res.status(200).json(resoult);
+        }
+
         const resoult = await addNewUser(req.body);
         return res.status(200).json(resoult);
+
     } catch (error) {
         console.error(error);
     }
